@@ -17,9 +17,14 @@ export const Mainscreen = () => {
   }
 
   const handleClickCreate = () => {
-    // navigate to room element
-    // placeholder loading logo
-    history("/chat");
+    // TODO:
+    // generate a random room number and check if there is a room
+    // with the same number in the database.
+    const getRandomInt = () => {
+      return Math.floor(Math.random() * 10000000);
+    }
+    const randomNumber = getRandomInt();
+    history("/chat", {state:{username:userName, roomNo:randomNumber}});
   }
 
   return (

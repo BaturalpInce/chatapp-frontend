@@ -4,27 +4,36 @@ import { useNavigate } from 'react-router-dom';
 export const Mainscreen = () => {
   const [userName, setUserName] = useState("");
   const [roomCode, setRoomCode] = useState("");
+
   const history = useNavigate();
 
   const onChangeUserName = (event) => {
-    console.log(event.target.value);
     setUserName(event.target.value);
   }
 
   const onChangeRoomCode = (event) => {
-    console.log(event.target.value);
     setRoomCode(event.target.value);
   }
 
-  const handleClickCreate = () => {
-    // TODO:
-    // generate a random room number and check if there is a room
-    // with the same number in the database.
-    const getRandomInt = () => {
-      return Math.floor(Math.random() * 10000000);
-    }
-    const randomNumber = getRandomInt();
-    history("/chat", {state:{username:userName, roomNo:randomNumber}});
+  const submitAll = async() => {
+      const date = new Date().toLocaleDateString("de-DE"); //DD/MM/YYYY format established
+
+      const tempJsonToPost = {"creator":userName, "dateCreated":date};
+      const finalizedJsonToPost = JSON.stringify(tempJsonToPost);
+      console.log(finalizedJsonToPost);
+
+      const response = await fetch("http://localhost:5500/messages", {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: finalizedJsonToPost
+        });
+      const roomNofromDatabase = await response.text();
+      setRoomCode(roomNofromDatabase);
+      history("/chat", {state:{username:userName, roomNo: roomNofromDatabase}});
+
   }
 
   return (
@@ -36,7 +45,7 @@ export const Mainscreen = () => {
             <h1 className="mb-4 mr-4 mt-1">Enter a user name:</h1>
             <input onChange={onChangeUserName} value={userName} placeholder="username" className="w-24 self-center p-1 mb-4 bg-backgroundInput"></input>
           </div>
-          <button onClick={handleClickCreate}className="bg-backgroundInput w-36 self-center hover:bg-[#6E85B2]">Create</button>
+          <button onClick={submitAll}className="bg-backgroundInput w-36 self-center hover:bg-[#6E85B2]">Create</button>
         </div>
 
         <div className="flex flex-col mt-16">

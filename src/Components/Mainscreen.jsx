@@ -22,7 +22,7 @@ export const Mainscreen = () => {
       const finalizedJsonToPost = JSON.stringify(tempJsonToPost);
       console.log(finalizedJsonToPost);
 
-      const response = await fetch("http://localhost:5500/messages", {
+      const response = await fetch("https://chatapp-backend-baturalpince.vercel.app/messages", {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',

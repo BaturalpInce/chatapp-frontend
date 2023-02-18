@@ -6,18 +6,31 @@ export const Chatscreen = () => {
   const location = useLocation();
 
   const [currentUser, setCurrentUser] = useState(location.state.username);
+  const [currentRoom, setCurrentRoom] = useState(location.state.roomNo);
+
+  const GETChat = async() => {
+    const urlToGETwithID = "https://chatapp-backend-baturalpince.vercel.app/messages?chatID="+currentRoom;
+    const getResponse = await fetch(urlToGETwithID, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      });
+    let getResponseCode = await getResponse.json();
+    console.log(getResponseCode);
+  }
+  GETChat();
 
   const handleReturn = async() => {
 
     //first check if current user is the creator of the chat because only the creator is able to delete chat
 
 
-    
-
     const deleteRequestJSON = {"delete":location.state.roomNo};
     const stringifyDeleteRequestJSON = JSON.stringify(deleteRequestJSON);
     console.log(stringifyDeleteRequestJSON);
-    const response = await fetch("http://localhost:5500/messages", {
+    const response = await fetch("https://chatapp-backend-baturalpince.vercel.app/messages", {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
